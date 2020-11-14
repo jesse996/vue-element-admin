@@ -40,6 +40,81 @@ import nestedRouter from './modules/nested'
  */
 export const constantRoutes = [
   {
+    path: '/pages',
+    component: Layout,
+    name: 'Pages',
+    meta: {
+      title: '页面',
+      icon: 'documentation'
+    },
+    children: [
+      {
+        path: 'slide',
+        component: () => import('@/views/pages/slide'),
+        name: 'Slide',
+        meta: { title: '轮波设置' }
+      },
+      {
+        path: 'page-manager',
+        component: () => import('@/views/pages/page-manager'),
+        name: 'PageManager',
+        meta: {
+          title: '页面管理'
+        }
+      }
+    ]
+  },
+  // {
+  //   path: '/articles',
+  //   component: Layout,
+  //   name: 'articles',
+  //   meta: {
+  //     title: '文章',
+  //     icon: 'documentation'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'add',
+  //       component: () => import('@/views/pages/slide'),
+  //       name: 'addArticle',
+  //       meta: { title: '添加文章' }
+  //     },
+  //     {
+  //       path: 'edit',
+  //       component: () => import('@/views/pages/page-manager'),
+  //       name: 'editArticle',
+  //       meta: {
+  //         title: '编辑文章'
+  //       }
+  //     }
+  //   ]
+  // },
+  {
+    path: '/settings',
+    component: Layout,
+    name: 'Settings',
+    meta: {
+      title: '设置',
+      icon: 'documentation'
+    },
+    children: [
+      {
+        path: 'admin',
+        component: () => import('@/views/settings/admin-setting'),
+        name: 'AdminSetting',
+        meta: { title: '管理员设置' }
+      },
+      {
+        path: 'records',
+        component: () => import('@/views/settings/option-records'),
+        name: 'OptionRecords',
+        meta: {
+          title: '操作记录'
+        }
+      }
+    ]
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
@@ -73,15 +148,15 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
-      }
-    ]
+    redirect: '/pages/slide'
+    // children: [
+    //   {
+    //     path: 'dashboard',
+    //     component: () => import('@/views/dashboard/index'),
+    //     name: 'Dashboard',
+    //     meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+    //   }
+    // ]
   },
   {
     path: '/documentation',
@@ -125,9 +200,9 @@ export const constantRoutes = [
 ]
 
 /**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
+   * asyncRoutes
+   * the routes that need to be dynamically loaded based on user roles
+   */
 export const asyncRoutes = [
   {
     path: '/permission',
@@ -191,12 +266,12 @@ export const asyncRoutes = [
   tableRouter,
 
   {
-    path: '/example',
+    path: '/articles',
     component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
+    redirect: '/articles/list',
+    name: 'Articles',
     meta: {
-      title: 'Example',
+      title: '文章',
       icon: 'el-icon-s-help'
     },
     children: [
@@ -204,7 +279,7 @@ export const asyncRoutes = [
         path: 'create',
         component: () => import('@/views/example/create'),
         name: 'CreateArticle',
-        meta: { title: 'Create Article', icon: 'edit' }
+        meta: { title: '添加文章', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
@@ -217,7 +292,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/example/list'),
         name: 'ArticleList',
-        meta: { title: 'Article List', icon: 'list' }
+        meta: { title: '文章列表', icon: 'list' }
       }
     ]
   },
