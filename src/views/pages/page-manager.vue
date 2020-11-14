@@ -7,6 +7,7 @@
       :data="tableData"
       stripe
       style="width: 100%"
+      :default-sort="{prop: 'order', order: 'descending'}"
       @selection-change="handleSelectionChange"
     >
       <el-table-column
@@ -30,8 +31,7 @@
       <el-table-column
         prop="order"
         label="排序"
-        sortable="true"
-        sort-by="order"
+        sortable
       />
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -89,12 +89,12 @@ export default {
         name: '改革先锋',
         alias: 'about',
         link: 'http://www.abc.com/about',
-        order: 10
+        order: 120
       }, {
         name: '改革先锋',
         alias: 'about',
         link: 'http://www.abc.com/about',
-        order: 10
+        order: 30
       }],
       multipleSelection: [],
       dialogFormVisible: false,
@@ -102,7 +102,7 @@ export default {
         name: '',
         alias: '',
         link: '',
-        order: ''
+        order: 0
       },
       formLabelWidth: '120px'
     }
