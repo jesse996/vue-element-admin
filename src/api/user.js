@@ -35,3 +35,24 @@ export function getUserList() {
     method: 'get'
   })
 }
+
+export function addUser(data) {
+  return request({
+    url: '/api/users',
+    method: 'post',
+    data
+  })
+}
+export function deleteUser(id) {
+  return request({
+    url: '/api/users/' + id,
+    method: 'delete'
+  })
+}
+export function updateUser({ id, ...rest }) {
+  return request({
+    url: '/api/users/' + id,
+    method: 'patch',
+    data: rest
+  })
+}
