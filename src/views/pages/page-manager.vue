@@ -50,6 +50,7 @@
     <div style="margin-top: 20px">
       <el-button @click="toggleSelection(tableData)">切换选中状态</el-button>
       <el-button @click="toggleSelection()">取消选择</el-button>
+      <el-button v-show="multipleSelection.length>0" type="danger" @click="deleteSelection()">删除选择</el-button>
     </div>
 
     <el-dialog title="添加页面" :visible.sync="dialogFormVisible">
@@ -196,6 +197,19 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection()
       }
+    },
+    deleteSelection() {
+      const res = []
+      for (const page of this.multipleSelection) {
+        res.push(deletePage(page.id))
+      }
+      Promise.all(res)
+        .then(res => {
+          console.log(JSON.stringify(res))
+        }).catch(e => {
+          alert('deleteSelection failed')
+        })
+      this.getData()
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
