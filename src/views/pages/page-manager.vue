@@ -29,7 +29,7 @@
         label="链接地址"
       />
       <el-table-column
-        prop="order"
+        prop="orderValue"
         label="排序"
         sortable
       />
@@ -63,55 +63,108 @@
         <el-form-item label="链接地址" :label-width="formLabelWidth" required prop="link">
           <el-input v-model="form.link" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="排序" :label-width="formLabelWidth" required prop="order">
-          <el-input v-model="form.order" autocomplete="off" />
+        <el-form-item label="排序" :label-width="formLabelWidth" required prop="orderValue">
+          <el-input v-model.number="form.orderValue" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addPage">确 定</el-button>
+        <el-button type="primary" @click="handleAddPage">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="修改页面" :visible.sync="editDialogFormVisible">
+      <el-form ref="form" :model="editForm">
+        <el-form-item label="页面名称" :label-width="formLabelWidth" required prop="name">
+          <el-input v-model="editForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="别名" :label-width="formLabelWidth" required prop="alias">
+          <el-input v-model="editForm.alias" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="链接地址" :label-width="formLabelWidth" required prop="link">
+          <el-input v-model="editForm.link" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="排序" :label-width="formLabelWidth" required prop="orderValue">
+          <el-input v-model.number="editForm.orderValue" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleUpdatePage">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { fetchPages, addPage, deletePage, updatePage } from '@/api/page'
+
 export default {
   name: 'PageManager',
   data() {
     return {
-      tableData: [{
-        name: '改革先锋',
-        alias: 'about',
-        link: 'http://www.abc.com/about',
-        order: 10
-      }, {
-        name: '改革先锋',
-        alias: 'about',
-        link: 'http://www.abc.com/about',
-        order: 120
-      }, {
-        name: '改革先锋',
-        alias: 'about',
-        link: 'http://www.abc.com/about',
-        order: 30
-      }],
+      tableData: [
+      //   {
+      //   name: '改革先锋',
+      //   alias: 'about',
+      //   link: 'http://www.abc.com/about',
+      //   order: 10
+      // }, {
+      //   name: '改革先锋',
+      //   alias: 'about',
+      //   link: 'http://www.abc.com/about',
+      //   order: 120
+      // }, {
+      //   name: '改革先锋',
+      //   alias: 'about',
+      //   link: 'http://www.abc.com/about',
+      //   order: 30
+      // }
+      ],
       multipleSelection: [],
       dialogFormVisible: false,
+      editDialogFormVisible: false,
       form: {
         name: '',
         alias: '',
         link: '',
-        order: 0
+        orderValue: 0
       },
-      formLabelWidth: '120px'
+      editForm: {
+        name: '',
+        alias: '',
+        link: '',
+        orderValue: 0
+      },
+      formLabelWidth: '120px',
+      query: {
+        // page: 0,
+        // size: 10
+      }
     }
   },
+  created() {
+    this.getData()
+  },
   methods: {
-    addPage() {
+    handleDelete(index, row) {
+      console.log('row.id:', row.id)
+      deletePage(row.id).then(({ data }) => {
+        console.log(data)
+        this.getData()
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    handleAddPage() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          alert('valide')
+          // alert('valide')
+          console.log(JSON.stringify(this.form))
+          addPage(Object.assign({}, this.form)).then(({ data }) => {
+            this.getData()
+          }).catch(e => {
+            alert('add failed')
+          })
           this.$refs.form.resetFields()
           this.dialogFormVisible = false
         } else {
@@ -120,11 +173,21 @@ export default {
       })
     },
     handleEdit(index, row) {
+      this.editDialogFormVisible = true
+      this.editForm = row
       console.log(index, row)
     },
-    handleDelete(index, row) {
-      console.log(index, row)
+    handleUpdatePage() {
+      updatePage(this.editForm).then(({ data }) => {
+        console.log('update page success')
+        console.log(data)
+      }).catch(e => {
+        console.log('update page failed')
+        alert('failed:' + JSON.stringify(e))
+      })
+      this.editDialogFormVisible = false
     },
+
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -136,6 +199,10 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    async getData() {
+      const { data } = await fetchPages(this.query)
+      this.tableData = data._embedded.pageInfoes
     }
   }
 
