@@ -24,7 +24,14 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+    url: '/logout',
+    method: 'get'
+  })
+}
+
+export function getUserList() {
+  return request({
+    url: '/api/users',
+    method: 'get'
   })
 }

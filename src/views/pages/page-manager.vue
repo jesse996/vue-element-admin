@@ -149,7 +149,7 @@ export default {
   methods: {
     handleDelete(index, row) {
       console.log('row.id:', row.id)
-      deletePage(row.id).then(({ data }) => {
+      deletePage(row.id).then(data => {
         console.log(data)
         this.getData()
       }).catch(e => {
@@ -161,7 +161,7 @@ export default {
         if (valid) {
           // alert('valide')
           console.log(JSON.stringify(this.form))
-          addPage(Object.assign({}, this.form)).then(({ data }) => {
+          addPage(Object.assign({}, this.form)).then(data => {
             this.getData()
           }).catch(e => {
             alert('add failed')
@@ -179,7 +179,7 @@ export default {
       console.log(index, row)
     },
     handleUpdatePage() {
-      updatePage(this.editForm).then(({ data }) => {
+      updatePage(this.editForm).then(data => {
         console.log('update page success')
         console.log(data)
       }).catch(e => {
@@ -214,9 +214,12 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    async getData() {
-      const { data } = await fetchPages(this.query)
-      this.tableData = data._embedded.pageInfoes
+    getData() {
+      fetchPages(this.query).then(data => {
+        this.tableData = data._embedded.pageInfoes
+      }).catch(e => {
+        alert('[page-manager]error:' + JSON.stringify(e))
+      })
     }
   }
 

@@ -74,20 +74,23 @@
 </template>
 
 <script>
+import { getUserList } from '@/api/user'
 export default {
   data() {
     return {
-      tableData: [{
-        id: 1,
-        name: 'admin',
-        tel: '186xxxxx',
-        addedDate: '2018-01-01'
-      }, {
-        id: 2,
-        name: 'admin2',
-        tel: '186xxxxx',
-        addedDate: '2018-01-01'
-      }],
+      tableData: [
+      //   {
+      //   id: 1,
+      //   name: 'admin',
+      //   tel: '186xxxxx',
+      //   addedDate: '2018-01-01'
+      // }, {
+      //   id: 2,
+      //   name: 'admin2',
+      //   tel: '186xxxxx',
+      //   addedDate: '2018-01-01'
+      // }
+      ],
       multipleSelection: [],
       dialogFormVisible: false,
       form: {
@@ -99,7 +102,17 @@ export default {
       formLabelWidth: '120px'
     }
   },
+  async created() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      getUserList().then(data => {
+        console.log(data)
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     addAdmin() {
       this.$refs.form.validate(valid => {
         if (valid) {
