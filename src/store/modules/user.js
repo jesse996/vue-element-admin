@@ -35,8 +35,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        console.log('login-----')
+        console.log(JSON.stringify(data))
+        commit('SET_TOKEN', data.data.username)
+        setToken(data.data.username)
         resolve()
       }).catch(error => {
         reject(error)
@@ -53,9 +55,14 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
+        console.log('get user info-----')
 
-        const { roles, name, avatar, introduction } = data
-
+        console.log(JSON.stringify(data))
+        // const { roles, name, avatar, introduction } = data
+        const { role, username: name } = data.data
+        var avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
+        var introduction = 'introductrion'
+        var roles = [role]
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -65,7 +72,8 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
-        resolve(data)
+        var newData = { roles, name, avatar, introduction }
+        resolve(newData)
       }).catch(error => {
         reject(error)
       })
