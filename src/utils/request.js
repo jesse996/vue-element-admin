@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
+import { addOption } from '@/api/option'
 // import { getToken } from '@/utils/auth'
 
 // create an axios instance
@@ -13,17 +14,17 @@ const service = axios.create({
   }
 })
 
-// // request interceptor
+// request interceptor
 // service.interceptors.request.use(
 //   config => {
 //     // do something before request is sent
 
-//     if (store.getters.token) {
-//       // let each request carry token
-//       // ['X-Token'] is a custom headers key
-//       // please modify it according to the actual situation
-//       config.headers['X-Token'] = getToken()
-//     }
+//     // if (store.getters.token) {
+//     //   // let each request carry token
+//     //   // ['X-Token'] is a custom headers key
+//     //   // please modify it according to the actual situation
+//     //   config.headers['X-Token'] = getToken()
+//     // }
 //     return config
 //   },
 //   error => {
@@ -47,11 +48,10 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    const code = response.code
-    console.log()
+    const status = response.status
 
-    if (code === 401 || code === 500 || (res.code && res.code !== 200)) {
-      if (code === 401) {
+    if (status === 401 || status === 500 || (res.code && res.code !== 200)) {
+      if (status === 401) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
@@ -64,6 +64,22 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(new Error(res.message || 'Error'))
+    }
+    const config = response.config
+    if (config.url === '/login') {
+      console.log('/login response inter')
+      console.log(response)
+      const username = res.data.username
+      const type = config.method
+      const optionData = { username, type, name: '登陆' }
+      addOption(optionData)
+      // .then(data => {
+      //   console.log('add option res:')
+      //   console.log(data)
+      // }).catch(e => {
+      //   console.log('add option err:')
+      //   console.log(e)
+      // })
     }
     return res
 
