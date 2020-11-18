@@ -87,7 +87,8 @@ export default {
         data = data._embedded.options
         for (const item of data) {
           const createAt = item.createAt
-          item.createAt = new Date(createAt).toLocaleDateString() + ' ' + new Date(createAt).toLocaleTimeString()
+          const date = new Date(createAt)
+          item.createAt = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
           let type = item.type
           switch (type) {
             case 'get':
