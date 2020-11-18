@@ -159,35 +159,21 @@ export default {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(async() => {
-              // alert('login success')
-              console.log(this.$store.getters.token)
-              const userId = this.$store.getters.token
-              await updateUser({ id: userId, lastLoginDateTime: new Date().toISOString() })
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-              // 修改用户的 last login time
-            })
-            .catch(() => {
-              this.loading = false
-              alert('login error')
-            })
-          // try {
-          //   await this.$store.dispatch('user/login', this.loginForm)
-          //   // alert('login success')
-          // } catch (e) {
-          //   this.loading = false
-          //   alert('login error')
-          // }
-          // try {
-          //   const patch = { id: this.$store.getter.id, lastLoginDateTime: new Date().toISOString() }
-          //   await updateUser(patch)
-          // } catch (e) {
-          //   alert('updateUser lastloginTime error')
-          // }
-          // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          // this.loading = false
+          try {
+            await this.$store.dispatch('user/login', this.loginForm)
+            // alert('login success')
+          } catch (e) {
+            this.loading = false
+            alert('login error')
+          }
+          try {
+            const patch = { id: this.$store.getters.token, lastLoginDateTime: new Date().toISOString() }
+            await updateUser(patch)
+          } catch (e) {
+            alert('updateUser lastloginTime error')
+          }
+          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          this.loading = false
         } else {
           alert('error submit!!')
           return false
