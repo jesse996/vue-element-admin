@@ -32,6 +32,8 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
+          // 页面刷新后，先把cookie中的token还原到vuex中
+          // store.commit('user/SET_TOKEN', hasToken)
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { roles } = await store.dispatch('user/getInfo')

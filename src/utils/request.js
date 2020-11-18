@@ -14,7 +14,7 @@ const service = axios.create({
   }
 })
 
-// request interceptor
+// request interceptor  // console.log('[request.js] username= ' + username)
 // service.interceptors.request.use(
 //   config => {
 //     // do something before request is sent
@@ -66,21 +66,64 @@ service.interceptors.response.use(
       return Promise.reject(new Error(res.message || 'Error'))
     }
     const config = response.config
+
+    // 用户登陆时记录登陆操作
     if (config.url === '/login') {
-      console.log('/login response inter')
-      console.log(response)
+      // console.log(response)
       const username = res.data.username
       const type = config.method
       const optionData = { username, type, name: '登陆' }
       addOption(optionData)
-      // .then(data => {
-      //   console.log('add option res:')
-      //   console.log(data)
-      // }).catch(e => {
-      //   console.log('add option err:')
-      //   console.log(e)
-      // })
+        .then(data => {
+          // console.log('add option res:')
+          // console.log(data)
+        }).catch(e => {
+          // console.log('add option err:')
+          console.log(e)
+        })
     }
+    const username = store.getters.name
+
+    if (config.url.startsWith('/api/users')) {
+      let optionData
+      if (config.method === 'post') {
+        // console.log('---------添加')
+        // console.log(response)
+        // const role = res.role
+        const addedName = res.username
+        const type = '管理员'
+        // if (role.endsWith('admin')) {
+        //   type = '超级管理员'
+        // } else if (role.endsWith('editor')) {
+        //   type = '管理员'
+        // }
+        const name = '添加' + type + ': ' + addedName
+        optionData = { username, type: config.method, name }
+        // } else if (config.method === 'get') {
+        //   optionData = { username, type: config.method, name: '获取用户' }
+      } else if (config.method === 'put' || config.method === 'patch') {
+        // console.log('---------修改')
+        // console.log(response)
+        const name = '修改管理员: ' + res.username
+        optionData = { username, type: config.method, name }
+      } else if (config.method === 'delete') {
+        console.log('---------删除')
+        // console.log(response.request.responseURL.split('users/')[1])
+        const deletedUsername = response.request.responseURL.split('?')[1]
+        console.log(deletedUsername)
+        optionData = { username, type: config.method, name: '删除管理员: ' + deletedUsername }
+      } else {
+        return res
+      }
+      addOption(optionData)
+        .then(data => {
+          // console.log(data)
+        }).catch(e => {
+          // console.log('add option err:')
+          console.log(e)
+        })
+    }
+
     return res
 
     // if the custom code is not 20000, it is judged as an error.

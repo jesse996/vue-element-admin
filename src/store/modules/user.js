@@ -34,14 +34,14 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(data => {
-        console.log('[sotre.user] data:', data)
-        console.log(JSON.stringify(data))
+        // console.log('[sotre.user] data:', data)
+        // console.log(JSON.stringify(data))
         commit('SET_TOKEN', data.data.id)
         setToken(data.data.id)
         resolve()
       }).catch(error => {
-        console.log('login error')
-        console.log(JSON.stringify(error))
+        // console.log('login error')
+        // console.log(JSON.stringify(error))
         reject(error)
       })
     })
@@ -55,8 +55,8 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-        console.log('get user info-----')
-        console.log(JSON.stringify(data))
+        // console.log('get user info-----')
+        // console.log(JSON.stringify(data))
         // const { roles, name, avatar, introduction } = data
         const { role, username: name } = data
         var avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'

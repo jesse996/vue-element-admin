@@ -48,6 +48,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      :current-page.sync="currentPage"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="10"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     <div style="margin-top: 20px">
       <el-button @click="toggleSelection(tableData)">切换选中状态</el-button>
       <el-button @click="toggleSelection()">取消选择</el-button>
@@ -73,6 +83,8 @@ export default {
           option: 'add page'
         }
       ],
+      currentPage: 0,
+      total: 0,
       query: {}
     }
   },
@@ -80,12 +92,16 @@ export default {
     this.getData()
   },
   methods: {
+    handleSizeChange() {
+
+    },
+    handleCurrentChange() {},
     async getData() {
       try {
-        let data = await fetchOptions(this.query)
+        const data = await fetchOptions(this.query)
         console.log(data)
-        data = data._embedded.options
-        for (const item of data) {
+        const options = data._embedded.options
+        for (const item of options) {
           const createAt = item.createAt
           const date = new Date(createAt)
           item.createAt = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
@@ -96,13 +112,17 @@ export default {
             case 'post':
               type = '添加'; break
             case 'put':
-              type = '添加'; break
+              type = '修改'; break
+            case 'patch':
+              type = '修改'; break
             case 'delete':
-              type = '添加'; break
+              type = '删除'; break
           }
           item.type = type
         }
-        this.tableData = data
+        this.tableData = options
+
+        this.total = data.page.totalElements
       } catch (e) {
         console.log(e)
       }

@@ -164,9 +164,9 @@ export default {
   },
   methods: {
     async handleDelete(index, row) {
-      console.log('row.id:', row.id)
+      console.log('row', row)
       try {
-        await deleteUser(row.id)
+        await deleteUser({ id: row.id, username: row.username })
         await this.getData()
       } catch (e) {
         console.log(e)
@@ -226,7 +226,7 @@ export default {
     async deleteSelection() {
       const res = []
       for (const user of this.multipleSelection) {
-        res.push(deleteUser(user.id))
+        res.push(deleteUser(user.id, user.username))
       }
       Promise.all(res)
         .then(res => {

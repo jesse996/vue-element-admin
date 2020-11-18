@@ -42,12 +42,15 @@ export function addUser(data) {
     data
   })
 }
-export function deleteUser(id) {
+
+export function deleteUser({ id, username }) {
   return request({
     url: '/api/users/' + id,
-    method: 'delete'
+    method: 'delete',
+    params: { username }
   })
 }
+
 export function updateUser({ id, ...rest }) {
   return request({
     url: '/api/users/' + id,
