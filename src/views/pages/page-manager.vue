@@ -47,6 +47,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      :current-page.sync="currentPage"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size.sync="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     <div style="margin-top: 20px">
       <el-button @click="toggleSelection(tableData)">切换选中状态</el-button>
       <el-button @click="toggleSelection()">取消选择</el-button>
@@ -137,16 +147,30 @@ export default {
         orderValue: 0
       },
       formLabelWidth: '120px',
-      query: {
-        // page: 0,
-        // size: 10
+      currentPage: 1,
+      pageSize: 10,
+      total: 0
+    }
+  },
+  computed: {
+    query() {
+      return {
+        page: this.currentPage - 1,
+        size: this.pageSize
       }
     }
+
   },
   created() {
     this.getData()
   },
   methods: {
+    handleSizeChange() {
+      this.getData()
+    },
+    handleCurrentChange() {
+      this.getData()
+    },
     handleDelete(index, row) {
       console.log('row.id:', row.id)
       deletePage(row.id).then(data => {
