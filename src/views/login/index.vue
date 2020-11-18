@@ -74,19 +74,22 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import { updateUser } from '@/api/user'
+// import store from '@/store'
 
 export default {
   name: 'Login',
   components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
+      // if (!validUsername(value)) {
+      //   callback(new Error('Please enter the correct user name'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
@@ -153,19 +156,38 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              alert('login success')
+            .then(async() => {
+              // alert('login success')
+              console.log(this.$store.getters.token)
+              const userId = this.$store.getters.token
+              await updateUser({ id: userId, lastLoginDateTime: new Date().toISOString() })
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              // 修改用户的 last login time
             })
             .catch(() => {
               this.loading = false
               alert('login error')
             })
+          // try {
+          //   await this.$store.dispatch('user/login', this.loginForm)
+          //   // alert('login success')
+          // } catch (e) {
+          //   this.loading = false
+          //   alert('login error')
+          // }
+          // try {
+          //   const patch = { id: this.$store.getter.id, lastLoginDateTime: new Date().toISOString() }
+          //   await updateUser(patch)
+          // } catch (e) {
+          //   alert('updateUser lastloginTime error')
+          // }
+          // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          // this.loading = false
         } else {
           alert('error submit!!')
           return false
