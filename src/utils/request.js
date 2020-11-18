@@ -107,10 +107,10 @@ service.interceptors.response.use(
         const name = '修改管理员: ' + res.username
         optionData = { username, type: config.method, name }
       } else if (config.method === 'delete') {
-        console.log('---------删除')
+        // console.log('---------删除')
         // console.log(response.request.responseURL.split('users/')[1])
         const deletedUsername = response.request.responseURL.split('?')[1]
-        console.log(deletedUsername)
+        // console.log(deletedUsername)
         optionData = { username, type: config.method, name: '删除管理员: ' + deletedUsername }
       } else {
         return res

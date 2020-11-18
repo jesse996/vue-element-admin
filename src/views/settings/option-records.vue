@@ -52,7 +52,7 @@
       background
       :current-page.sync="currentPage"
       :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
+      :page-size.sync="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -83,19 +83,30 @@ export default {
           option: 'add page'
         }
       ],
-      currentPage: 0,
-      total: 0,
-      query: {}
+      currentPage: 1,
+      pageSize: 10,
+      total: 0
     }
+  },
+  computed: {
+    query() {
+      return {
+        page: this.currentPage - 1,
+        size: this.pageSize
+      }
+    }
+
   },
   created() {
     this.getData()
   },
   methods: {
     handleSizeChange() {
-
+      this.getData()
     },
-    handleCurrentChange() {},
+    handleCurrentChange() {
+      this.getData()
+    },
     async getData() {
       try {
         const data = await fetchOptions(this.query)
