@@ -18,16 +18,20 @@
         width="180"
       />
       <el-table-column
-        prop="date"
+        prop="createAt"
         label="日期"
         width="180"
       />
       <el-table-column
-        prop="name"
+        prop="username"
         label="操作人"
       />
       <el-table-column
-        prop="option"
+        prop="type"
+        label="类型"
+      />
+      <el-table-column
+        prop="name"
         label="操作"
       />
       <el-table-column label="操作">
@@ -52,23 +56,56 @@
 </template>
 
 <script>
+import { fetchOptions } from '@/api/option'
 export default {
   data() {
     return {
-      tableData: [{
-        id: 1,
-        date: '2019-01-1',
-        name: 'admin',
-        option: 'add page'
-      }, {
-        id: 2,
-        date: '2019-01-1',
-        name: 'admin',
-        option: 'add page'
-      }]
+      tableData: [
+        {
+          id: 1,
+          date: '2019-01-1',
+          name: 'admin',
+          option: 'add page'
+        }, {
+          id: 2,
+          date: '2019-01-1',
+          name: 'admin',
+          option: 'add page'
+        }
+      ],
+      query: {}
     }
   },
+  created() {
+    this.getData()
+  },
   methods: {
+    async getData() {
+      try {
+        let data = await fetchOptions(this.query)
+        console.log(data)
+        data = data._embedded.options
+        for (const item of data) {
+          const createAt = item.createAt
+          item.createAt = new Date(createAt).toLocaleDateString() + ' ' + new Date(createAt).toLocaleTimeString()
+          let type = item.type
+          switch (type) {
+            case 'get':
+              type = '查询'; break
+            case 'post':
+              type = '添加'; break
+            case 'put':
+              type = '添加'; break
+            case 'delete':
+              type = '添加'; break
+          }
+          item.type = type
+        }
+        this.tableData = data
+      } catch (e) {
+        console.log(e)
+      }
+    },
     handleEdit(index, row) {
       console.log(index, row)
     },
