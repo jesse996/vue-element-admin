@@ -2,7 +2,8 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/vue-element-admin/article/list',
+    // url: '/vue-element-admin/article/list',
+    url: '/api/articles',
     method: 'get',
     params: query
   })
@@ -10,9 +11,9 @@ export function fetchList(query) {
 
 export function fetchArticle(id) {
   return request({
-    url: '/vue-element-admin/article/detail',
-    method: 'get',
-    params: { id }
+    // url: '/vue-element-admin/article/detail',
+    url: '/api/articles/' + id,
+    method: 'get'
   })
 }
 
@@ -26,7 +27,7 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/vue-element-admin/article/create',
+    url: '/api/articles',
     method: 'post',
     data
   })
@@ -34,8 +35,8 @@ export function createArticle(data) {
 
 export function updateArticle(data) {
   return request({
-    url: '/vue-element-admin/article/update',
-    method: 'post',
+    url: '/api/articles',
+    method: 'patch',
     data
   })
 }

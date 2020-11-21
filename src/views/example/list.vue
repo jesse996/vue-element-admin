@@ -9,7 +9,7 @@
 
       <el-table-column width="180px" align="center" label="Date">
         <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.createAt | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 
@@ -19,19 +19,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="100px" label="Importance">
+      <!-- <el-table-column width="100px" label="Importance">
         <template slot-scope="scope">
           <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column class-name="status-col" label="Status" width="110">
+      <!-- <el-table-column class-name="status-col" label="Status" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
             {{ row.status }}
           </el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column min-width="300px" label="Title">
         <template slot-scope="{row}">
@@ -63,16 +63,16 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 export default {
   name: 'ArticleList',
   components: { Pagination },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+  // filters: {
+  //   statusFilter(status) {
+  //     const statusMap = {
+  //       published: 'success',
+  //       draft: 'info',
+  //       deleted: 'danger'
+  //     }
+  //     return statusMap[status]
+  //   }
+  // },
   data() {
     return {
       list: null,
@@ -91,8 +91,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        console.log('articles:')
+        console.log(response)
+        this.list = response._embedded.articles
+        this.total = response.page.totalElements
         this.listLoading = false
       })
     }

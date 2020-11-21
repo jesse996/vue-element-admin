@@ -1,7 +1,7 @@
 <template>
   <div class="upload-container">
     <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">
-      upload
+      上传
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
       <el-upload
@@ -12,18 +12,18 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="/upload"
         list-type="picture-card"
       >
-        <el-button size="small" type="primary">
-          Click upload
+        <el-button slot="trigger" size="small" type="primary">
+          点击上传
         </el-button>
       </el-upload>
       <el-button @click="dialogVisible = false">
-        Cancel
+        取消
       </el-button>
       <el-button type="primary" @click="handleSubmit">
-        Confirm
+        确定
       </el-button>
     </el-dialog>
   </div>
@@ -63,11 +63,29 @@ export default {
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
+      console.log('handleSuccess response')
+      console.log(response)
+      // 登陆过期重新登陆
+      if (response.code === 401) {
+        this.$confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+          confirmButtonText: 'Re-Login',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+        return
+      }
+      console.log('handleSuccess file')
+      console.log(file)
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          // this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = response.data
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }

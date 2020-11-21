@@ -76,7 +76,7 @@
 <script>
 // import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
-import { updateUser } from '@/api/user'
+// import { updateUser } from '@/api/user'
 // import store from '@/store'
 
 export default {
@@ -165,12 +165,6 @@ export default {
           } catch (e) {
             this.loading = false
             alert('login error')
-          }
-          try {
-            const patch = { id: this.$store.getters.token, lastLoginDateTime: new Date().toISOString() }
-            await updateUser(patch)
-          } catch (e) {
-            alert('updateUser lastloginTime error')
           }
           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
           this.loading = false

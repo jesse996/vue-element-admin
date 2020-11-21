@@ -71,17 +71,6 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          id: 1,
-          date: '2019-01-1',
-          name: 'admin',
-          option: 'add page'
-        }, {
-          id: 2,
-          date: '2019-01-1',
-          name: 'admin',
-          option: 'add page'
-        }
       ],
       currentPage: 1,
       pageSize: 10,
